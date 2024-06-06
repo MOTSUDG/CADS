@@ -300,28 +300,27 @@ Primero vamos a crear un nodo ejecutando un servidor Nginx de la forma imperativ
       apiVersion: v1
       kind: Pod
       metadata:
-      name: myapp-pod
+        name: myapp-pod
       labels:
          app: myapp
          type: front-end
       spec:
-      containers:
-      - name: nginx-container
-         image: nginx
-         resources:
-            requests:
-            cpu: 100m
-            memory: 128Mi
-            limits:
-            cpu: 250m
-            memory: 256Mi    
-         ports:
-         - containerPort: 80
+        containers:
+        - name: nginx-container
+          image: nginx
+          resources:
+              requests:
+              cpu: 100m
+              memory: 128Mi
+              limits:
+              cpu: 250m
+              memory: 256Mi    
+          ports:
+          - containerPort: 80
             name: http
             protocol: TCP
-         env:
-         - name: DBCON
-            value: myconnectionstring
+          env:
+          - name: DBCON
       ```
 
 
