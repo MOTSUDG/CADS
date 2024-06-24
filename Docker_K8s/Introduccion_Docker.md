@@ -1,9 +1,3 @@
-# Curso Docker y Kubernetes
-
-<p align=center>
-<img src="images/docker/intro.avif" width="600">
-</p>
-
 # ¿Qué es es Docker?
 
 <p align=center>
@@ -14,8 +8,7 @@ Docker es una plataforma abierta para desarrollar, enviar y ejecutar aplicacione
 
 ## Alcance de este curso:
 
-- Introducción a Docker
-- Casos de uso
+- Introducción a contenedores
 - Arquitectura
 - Componentes
 - Instalación
@@ -24,8 +17,10 @@ Docker es una plataforma abierta para desarrollar, enviar y ejecutar aplicacione
 - Construcción de imagenes
 - Volúmenes
 - Multi-Contenedores
+  
+# Introducción de contenedores
 
-## ¿Para que puedo utilizar Docker?
+Los contenedores son unidades ejecutables de software que empaquetan el código de la aplicación junto con sus bibliotecas y dependencias. Permiten que el código se ejecute en cualquier entorno informático, ya sea de escritorio, de TI tradicional o de infraestructura en la nube. Los contenedores aprovechan una forma de virtualización del sistema operativo (SO) en la que las características del kernel del sistema operativo (por ejemplo, espacios de nombres y cgroups de Linux, silos de Windows y objetos de trabajo) se pueden utilizar para aislar procesos y controlar la cantidad de CPU, memoria y disco al que esos procesos pueden acceder.
 
 - Entrega rápida y consistente de sus aplicaciones
 
@@ -38,6 +33,38 @@ Docker es una plataforma abierta para desarrollar, enviar y ejecutar aplicacione
 - Ejecutar más cargas de trabajo en el mismo hardware
 
     - Docker es ligero y rápido. Proporciona una alternativa viable y rentable a las máquinas virtuales basadas en hipervisor, para que pueda utilizar una mayor capacidad de su servidor para lograr sus objetivos comerciales. Docker es perfecto para entornos de alta densidad y para implementaciones pequeñas y medianas donde necesitas hacer más con menos recursos.
+ 
+#### Contenedores
+
+Un contenedor es una instancia ejecutable de una imagen. Puede crear, iniciar, detener, mover o eliminar un contenedor mediante la API o CLI de Docker. Puedes conectar un
+contenedor a una o más redes, adjuntarle almacenamiento o incluso crear una nueva imagen según su estado actual.
+
+De forma predeterminada, un contenedor está relativamente bien aislado de otros contenedores y su máquina anfitriona. Puede controlar el grado de aislamiento de la red, el almacenamiento y u otros subsistemas subyacentes son de otros contenedores o del host máquina.
+
+Un contenedor se define por su imagen, así como por las opciones de configuración que proporcionarle cuando lo cree o inicie. Cuando se retira un contenedor, cualquier cambio en
+su estado que no está almacenado en un almacenamiento persistente desaparece.
+
+#### Imágenes
+
+Una imagen es una plantilla de solo lectura con instrucciones para crear un Docker envase. A menudo, una imagen se basa en otra imagen, con algunos detalles adicionales personalizados. Por ejemplo, puede crear una imagen basada en `ubuntu`, pero instala el servidor web Apache y su aplicación, así como el detalles de configuración necesarios para que su aplicación se ejecute.
+
+Puedes crear tus propias imágenes o usar solo aquellas creadas por otros y publicadas en un registro. Para construir su propia imagen, crea un Dockerfile con una sintaxis simple para definir los pasos necesarios para crear la imagen y ejecutarla. Cada instrucción en un Dockerfile crea una capa en la imagen. Cuando usted cambie el Dockerfile y reconstruya la imagen, solo aquellas capas que tengan modificados se reconstruyen. Esto es parte de lo que hace que las imágenes sean tan ligeras, pequeñas y y rápido, en comparación con otras tecnologías de virtualización.
+
+### Alternativas
+
+- Docker: Es una plataforma abierta para desarrollar, enviar y ejecutar aplicaciones. Docker le permite separar sus aplicaciones de su infraestructura para que pueda entregar software rápidamente. Con Docker, puede administrar su infraestructura de la misma manera que administra sus aplicaciones. Al aprovechar las metodologías de Docker para enviar, probar e implementar código, puede reducir significativamente el retraso entre escribir el código y ejecutarlo en producción.
+
+- Jenkins: Es un servidor de automatización de código abierto autónomo que se puede utilizar para automatizar todo tipo de tareas relacionadas con la creación, prueba y entrega o implementación de software.
+
+- Podman: Es una herramienta nativa de Linux, de código abierto y sin demonio, diseñada para facilitar la búsqueda, ejecución, creación, uso compartido e implementación de aplicaciones utilizando contenedores e imágenes de contenedores de la Open Containers Initiative ( OCI ).
+
+- Apptainer/Singularity: Es una plataforma de contenedores creada para el caso de uso HPC/HTC. Permite construir y ejecutar contenedores con sólo unos pocos pasos en la mayoría de los casos, y su diseño presenta ventajas clave para la comunidad científica:
+
+    - Imágenes de contenedores basadas en un solo archivo, que facilitan la distribución, el archivado y el intercambio.
+    - Capacidad de ejecutarse, y en sistemas modernos también de instalarse, sin ningún demonio raíz o privilegios setuid.
+    - Conserva los permisos en el entorno. El usuario fuera del contenedor puede ser el mismo usuario dentro.
+
+- Sarus: Es un software para ejecutar contenedores Linux en entornos de Computación de Alto Rendimiento. Su desarrollo ha sido impulsado por los requisitos específicos de los sistemas HPC, al tiempo que aprovecha estándares y tecnologías abiertos para fomentar la participación de los proveedores y la comunidad.
 
 ## Arquitectura
 
@@ -56,37 +83,17 @@ El demonio Docker (`dockerd`) escucha las solicitudes de la API de Docker y admi
 El cliente Docker (`docker`) es la forma principal en que interactúan muchos usuarios de Docker con Docker. Cuando usa comandos como `docker run`, el cliente envía estos
 comandos a `dockerd`, que los ejecuta. El comando `docker` usa el API de Docker. El cliente Docker puede comunicarse con más de un demonio.
 
-### Objetos acoplables
-
-Cuando usa Docker, está creando y usando imágenes, contenedores, redes, volúmenes, complementos y otros objetos. Esta sección es una breve descripción de algunos de esos objetos.
-
-#### Imágenes
-
-Una imagen es una plantilla de solo lectura con instrucciones para crear un Docker envase. A menudo, una imagen se basa en otra imagen, con algunos detalles adicionales personalizados. Por ejemplo, puede crear una imagen basada en `ubuntu`, pero instala el servidor web Apache y su aplicación, así como el detalles de configuración necesarios para que su aplicación se ejecute.
-
-Puedes crear tus propias imágenes o usar solo aquellas creadas por otros y publicadas en un registro. Para construir su propia imagen, crea un Dockerfile con una sintaxis simple para definir los pasos necesarios para crear la imagen y ejecutarla. Cada instrucción en un Dockerfile crea una capa en la imagen. Cuando usted cambie el Dockerfile y reconstruya la imagen, solo aquellas capas que tengan modificados se reconstruyen. Esto es parte de lo que hace que las imágenes sean tan ligeras, pequeñas y y rápido, en comparación con otras tecnologías de virtualización.
-
-#### Contenedores
-
-Un contenedor es una instancia ejecutable de una imagen. Puede crear, iniciar, detener, mover o eliminar un contenedor mediante la API o CLI de Docker. Puedes conectar un
-contenedor a una o más redes, adjuntarle almacenamiento o incluso crear una nueva imagen según su estado actual.
-
-De forma predeterminada, un contenedor está relativamente bien aislado de otros contenedores y su máquina anfitriona. Puede controlar el grado de aislamiento de la red, el almacenamiento y u otros subsistemas subyacentes son de otros contenedores o del host máquina.
-
-Un contenedor se define por su imagen, así como por las opciones de configuración que proporcionarle cuando lo cree o inicie. Cuando se retira un contenedor, cualquier cambio en
-su estado que no está almacenado en un almacenamiento persistente desaparece.
-
 # Instalación de Docker *
 
 Para instalar Docker en nuestro dispositivo hay distintas opciones:
 
 - Windows
-    - Instalar WSL (Windows Subsystem for Linux)
-    - Instalar Docker Hub
+    - [Instalar WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/es-es/windows/wsl/install)
+    - [Instalar Docker Hub](https://hub.docker.com/open-desktop)
 - Linux
-    - CLI   
+    - Command Line Interface (CLI)   
 
-## Comandos para instalar Docker
+## Comandos para instalar Docker en Linux
 
     $ sudo apt update
 
@@ -96,7 +103,7 @@ Para instalar Docker en nuestro dispositivo hay distintas opciones:
 
     $ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 
 
-    $ sudo apt update 
+    $ sudo apt update
 
     $ apt-cache policy docker-ce 
 
@@ -105,9 +112,24 @@ Para instalar Docker en nuestro dispositivo hay distintas opciones:
 ## Comprobamos que Docker este funcionando
 
     $ sudo systemctl status docker 
-    
 
-*Opcional eliminar sudo en docker* 
+
+```console
+[sudo] password for user:
+● docker.service - Docker Application Container Engine
+    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+    Active: active (running) since Thu 2024-06-20 10:55:07 CST; 20min ago
+TriggeredBy: ● docker.socket
+    Docs: https://docs.docker.com
+Main PID: 260 (dockerd)
+    Tasks: 17
+    Memory: 118.0M
+    CGroup: /system.slice/docker.service
+            └─260 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+```
+
+    
+#### Opcional eliminar sudo en docker 
 
 1.
     ```console
@@ -118,8 +140,6 @@ Para instalar Docker en nuestro dispositivo hay distintas opciones:
     $ su - ${USER} 
     ```
 
-$~$
-
 # Comandos basicos de Docker
 
 1. Mostrar información del sistema
@@ -128,30 +148,122 @@ $~$
     $ docker info
     ```
 
+    ```console
+    $ Client: Docker Engine - Community
+        Version:    26.1.2
+        Context:    default
+        Debug Mode: false
+    ```
+
 2. Mostrar la versión del sistema
 
     ```console
     $ docker version
     ```
 
-# Descargar y ejecutar un servidor Nginx
+    ```console
+    $  Client: Docker Engine - Community
+        Version:           26.1.2
+        API version:       1.45
+        Go version:        go1.21.10
+        Git commit:        211e74b
+        Built:             Wed May  8 13:59:59 2024
+        OS/Arch:           linux/amd64
+        Context:           default
+
+        Server: Docker Engine - Community
+        Engine:
+        Version:          26.1.2
+        API version:      1.45 (minimum version 1.24)
+        Go version:       go1.21.10
+        Git commit:       ef1912d
+        Built:            Wed May  8 13:59:59 2024
+        OS/Arch:          linux/amd64
+        Experimental:     false
+        containerd:
+        Version:          1.6.31
+        GitCommit:        e377cd56a71523140ca6ae87e30244719194a521
+        runc:
+        Version:          1.1.12
+        GitCommit:        v1.1.12-0-g51d5e94
+        docker-init:
+        Version:          0.19.0
+        GitCommit:        de40ad0
+    ```
+
+# Prueba Hello World
+
+Descargamos la imagen de prueba para verificar que nuestra instalación de Docker.
+
+-  
+    ```console
+    $ docker pull hello-world
+    $ docker run hello-world
+    ```
+
+   ```console
+    Hello from Docker!
+        This message shows that your installation appears to be working correctly.
+
+        To generate this message, Docker took the following steps:
+        1. The Docker client contacted the Docker daemon.
+        2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+            (amd64)
+        3. The Docker daemon created a new container from that image which runs the
+            executable that produces the output you are currently reading.
+        4. The Docker daemon streamed that output to the Docker client, which sent it
+            to your terminal.
+
+        To try something more ambitious, you can run an Ubuntu container with:
+        $ docker run -it ubuntu bash
+
+        Share images, automate workflows, and more with a free Docker ID:
+        https://hub.docker.com/
+
+        For more examples and ideas, visit:
+        https://docs.docker.com/get-started/
+
+   ```
+
+# Descarga de imagenes
 
 1. Descargamos la imagen Nginx desde Docker Hub
 
     ```console
     $ docker run -d -p 8080:80 --name webserver nginx
+    
+    Unable to find image 'nginx:latest' locally
+    latest: Pulling from library/nginx
+    2cc3ae149d28: Pull complete
+    1018f2b8dba8: Pull complete
+    b831e78d8e20: Pull complete
+    3ab22521e919: Pull complete
+    5112bf42775b: Pull complete
+    cbdaf9e4ee2d: Pull complete
+    a06b6fd631e8: Pull complete
+    Digest: sha256:9c367186df9a6b18c6735357b8eb7f407347e84aea09beb184961cb83543d46e
+    Status: Downloaded newer image for nginx:latest
+    ef5849a2c694b3f36ceeb307b27184006e1d4765c3d18b46b778a8c47edb303f
     ```
 
 2. Listar los contenedores
 
     ```console
     $ docker ps
+    
+    CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                                   NAMES
+    ef5849a2c694   nginx     "/docker-entrypoint.…"   48 seconds ago   Up 46 seconds   0.0.0.0:8080->80/tcp, :::8080->80/tcp   webserver
     ```
 
 3. Listar las imagenes
     
     ```console
     $ docker images
+
+    REPOSITORY                    TAG       IMAGE ID       CREATED       SIZE
+    nginx                         latest    e0c9858e10ed   3 days ago    188MB
+    gusdanMX/yelpcamp             v1        76f5fa881385   3 weeks ago   169MB
+    gcr.io/k8s-minikube/kicbase   v0.0.44   5a6e59a9bdc0   6 weeks ago   1.26GB
     ```
 
 4. Entrar al contenedor por medio *bash*
@@ -178,8 +290,6 @@ $~$
     ```console
     $ docker rmi nginx
     ```
-
-$~$
 
 # Descarga la app de prueba
 
